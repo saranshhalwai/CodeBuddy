@@ -1,0 +1,115 @@
+# CodeBuddy .gitignore
+# Ignored files for Python, Node, build artifacts, editors, and OS
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+downloads/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.spec
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+venv.bak/
+
+# pipenv / poetry
+Pipfile.lock
+.poetry/
+poetry.lock
+
+# pyenv
+.python-version
+
+# pip cache and wheel
+pip-log.txt
+pip-delete-this-directory.txt
+pip-wheel-metadata/
+
+# Test, coverage, and caches
+.pytest_cache/
+.cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.mypy_cache/
+.pyre/
+
+# Editor and IDE
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+.history/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite3
+
+# Environment files (secrets)
+.env
+.env.*
+.env.local
+local.env
+
+# Jupyter
+.ipynb_checkpoints
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp.cjs
+.pnp.js
+.pnp/
+
+# JS build artifacts
+dist/
+build/
+tmp/
+temp/
+*.tgz
+
+# Extension-specific build artifacts
+/extension/node_modules/
+/extension/dist/
+/extension/build/
+/extension/.esbuild/
+/extension/.cache/
+
+# Misc
+*.swp
+*~
+*.bak
+
+# Source maps and compiled assets
+*.map
+*.min.js
+
+# Ignore environment-specific local files
+.local
+
+# End of file

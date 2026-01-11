@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "CF Prerequisite Analyzer",
+  "version": "0.1.0",
+  "description": "AI prerequisite analyzer for Codeforces",
+  "host_permissions": [
+    "https://codeforces.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://codeforces.com/problemset/problem/*"],
+      "js": ["dist/contentScript.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
