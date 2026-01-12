@@ -8,19 +8,18 @@ load_dotenv()
 
 DEV_MODE = os.getenv("DEVELOPMENT_MODE", "false").lower() == "true"
 
-def get_llm_client():
+def get_raw_llm():
     if DEV_MODE:
         # -------- GROQ (Development) --------
         groq_api_key = os.getenv("GROQ_API_KEY")
         if not groq_api_key:
             raise RuntimeError("GROQ_API_KEY not found")
 
-        groq_client = Groq(api_key=groq_api_key)
-
-        return instructor.from_groq(
-            groq_client,
-            model="llama-3.3-70b-versatile"
-        )
+        return {
+            "provider": "groq",
+            "client": Groq(api_key=groq_api_key),
+            "model": "llama-3.3-70b-versatile",
+        }
 
     else:
         # -------- GEMINI (Production) --------
@@ -30,9 +29,31 @@ def get_llm_client():
 
         genai.configure(api_key=gemini_api_key)
 
-        model = genai.GenerativeModel("gemini-2.5-flash-lite")
+        return {
+            "provider": "gemini",
+            "model": genai.GenerativeModel("gemini-2.5-flash-lite"),
+        }
 
-        return instructor.from_gemini(
-            model,
-            mode=instructor.Mode.GEMINI_JSON
+import instructor
+
+
+def wrap_with_instructor(llm):
+    provider = llm["provider"]
+
+    if provider == "groq":
+        return instructor.from_groq(
+            llm["client"],
+            model=llm["model"],
         )
+
+    if provider == "gemini":
+        return instructor.from_gemini(
+            llm["model"],
+            mode=instructor.Mode.GEMINI_JSON,
+        )
+
+    raise ValueError(f"Unsupported LLM provider: {provider}")
+
+def get_llm_client():
+    llm = get_raw_llm()
+    return wrap_with_instructor(llm)

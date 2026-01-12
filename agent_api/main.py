@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Query, HTTPException
-from models import LeetCodePrerequisites
+from models import LeetCodePrerequisites, AskLeetCodeRequest
 from llm_client import get_llm_client
 
 app = FastAPI(title="LeetCode Prerequisite API")
@@ -10,8 +10,8 @@ client = get_llm_client()
 async def health_check():
     return "Welcome to the Code Buddy Agent API"
 
-@app.get("/askleetcode", response_model=LeetCodePrerequisites)
-async def ask_leetcode(question: str = Query(..., min_length=1)):
+@app.post("/askleetcode", response_model=LeetCodePrerequisites)
+async def ask_leetcode(payload: AskLeetCodeRequest):
     prompt = f"""
     For the following LeetCode problem, list all prerequisite topics,
     algorithms, and techniques required to solve it.
@@ -19,7 +19,7 @@ async def ask_leetcode(question: str = Query(..., min_length=1)):
     Sort them from EASY to HARD.
 
     LeetCode Question:
-    {question}
+    {payload.question}
     """
 
     try:
