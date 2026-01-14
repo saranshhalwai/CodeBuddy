@@ -1,0 +1,285 @@
+Arrays
+
+Strings
+
+Hash Tables / Maps
+
+Sets
+
+Linked Lists
+
+Stacks
+
+Queues
+
+Deques
+
+Linear Search
+
+Binary Search
+
+Ternary Search
+
+Binary Search on Answer
+
+Sorting basics
+
+Custom Comparators
+
+Counting Sort
+
+Radix Sort
+
+Bucket Sort
+
+Two pointers (same direction)
+
+Two pointers (opposite direction)
+
+Fixed-size sliding window
+
+Variable-size sliding window
+
+Monotonic window techniques
+
+Prefix sums
+
+Suffix sums
+
+Difference arrays
+
+Prefix XOR
+
+Prefix min / max
+
+2D prefix sums
+
+Bitwise AND / OR / XOR
+
+Bit masking
+
+Bit counting
+
+Subset enumeration via bits
+
+Gray code
+
+Bit DP
+
+XOR basis
+
+GCD / LCM
+
+Extended Euclidean Algorithm
+
+Modular arithmetic
+
+Modular inverse
+
+Fast exponentiation
+
+Prime checking
+
+Sieve of Eratosthenes
+
+Linear sieve
+
+Prime factorization
+
+Euler Totient Function
+
+Chinese Remainder Theorem
+
+Permutations
+
+Combinations
+
+Binomial coefficients
+
+Pascal’s Triangle
+
+Stars and Bars
+
+Inclusion–Exclusion Principle
+
+Linear equations
+
+Polynomial evaluation
+
+Matrix multiplication
+
+Matrix exponentiation
+
+Interval scheduling
+
+Activity selection
+
+Greedy choice proofs
+
+Exchange arguments
+
+Sorting + greedy
+
+Priority-queue-based greedy
+
+1D DP
+
+2D DP
+
+State transition modeling
+
+Knapsack (0/1, unbounded, bounded)
+
+Subset sum
+
+LIS / LDS
+
+LCS
+
+Edit distance
+
+DP on prefixes
+
+Bitmask DP
+
+Digit DP
+
+DP on trees
+
+DP on graphs
+
+DP with monotonic queue
+
+Divide and Conquer DP optimization
+
+Knuth optimization
+
+Convex Hull Trick DP
+
+Graph representations
+
+DFS
+
+BFS
+
+Connected components
+
+Bipartite graphs
+
+Dijkstra
+
+Bellman–Ford
+
+Floyd–Warshall
+
+0-1 BFS
+
+Multi-source BFS
+
+Tree traversal
+
+Rooted trees
+
+Tree diameter
+
+Lowest Common Ancestor (LCA)
+
+Binary lifting
+
+Euler tour technique
+
+Topological sort
+
+DAG DP
+
+Strongly Connected Components (Kosaraju, Tarjan)
+
+Bridges and articulation points
+
+Minimum Spanning Tree (Kruskal, Prim)
+
+Disjoint Set Union (Union-Find)
+
+Offline queries on graphs
+
+Segment Tree
+
+Lazy propagation
+
+Fenwick Tree (BIT)
+
+Sparse Table
+
+RMQ
+
+Mo’s Algorithm
+
+Persistent data structures
+
+String hashing (rolling hash)
+
+KMP
+
+Z-algorithm
+
+Trie
+
+Aho–Corasick
+
+Suffix array
+
+Suffix automaton
+
+Palindrome algorithms (Manacher)
+
+Points, lines, vectors
+
+Cross product
+
+Dot product
+
+Orientation tests
+
+Convex hull
+
+Line intersection
+
+Distance calculations
+
+Rotations and transformations
+
+Nim
+
+Grundy numbers
+
+Sprague–Grundy theorem
+
+Impartial games
+
+Winning/losing states
+
+Meet in the Middle
+
+Offline queries
+
+Coordinate compression
+
+Randomized algorithms
+
+Hash collision avoidance
+
+Heavy-Light Decomposition (HLD)
+
+Centroid decomposition
+
+Flow algorithms (Max Flow, Min Cut)
+
+Matching (Bipartite matching, Hopcroft–Karp)
+
+Network flow with costs
+
+FFT / NTT
+
+Polynomial convolution
+
+

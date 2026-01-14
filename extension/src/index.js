@@ -1,7 +1,16 @@
 import { extractCodeforcesProblem } from "./content/extractor.js";
+import { fetchPrerequisites } from "./content/api.js";
+import { injectSidebarUI, renderPrerequisites } from "./content/uiInjector.js";
 
-(function () {
-  const data = extractCodeforcesProblem();
-  if (!data) return;
-  console.log("CF_PROBLEM_EXTRACTED", data);
-})();
+injectSidebarUI(async () => {
+  const problem = extractCodeforcesProblem();
+  if (!problem) return;
+
+  renderPrerequisites({
+    prerequisites: ["Analyzing..."],
+    difficulty: ""
+  });
+
+  const result = await fetchPrerequisites(problem);
+  renderPrerequisites(result);
+});

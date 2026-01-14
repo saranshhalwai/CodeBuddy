@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Optional
 
 
 class Prerequisite(BaseModel):
@@ -10,5 +10,9 @@ class Prerequisite(BaseModel):
 class AskLeetCodeRequest(BaseModel):
     question: str = Field(min_length=1)
 
-class LeetCodePrerequisites(BaseModel):
+class Prerequisites(BaseModel):
     prerequisites: List[Prerequisite]
+
+class AskCodeForcesRequest(BaseModel):
+    problem: str = Field(min_length=1)
+    solution: Optional[str] = Field(min_length=1)
