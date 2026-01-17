@@ -115,3 +115,6 @@ temp/
 ./backend/firebase-service-account.json
 
 # End of file
+
+extension.pem
+extension.crx
