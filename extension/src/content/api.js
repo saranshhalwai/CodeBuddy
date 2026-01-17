@@ -1,7 +1,7 @@
-import { getUserHandle, getProblemMeta } from "./submissionExtractor.js";
+import { getUserHandle } from "./submissionExtractor.js";
 
 const API_URL = "http://127.0.0.1:8000/analyze";
-const SUBMIT_URL = "http://127.0.0.1:8000/"
+const SUBMIT_URL = "http://127.0.0.1:8000/verify_solution"
 
 export async function fetchPrerequisites(problemData) {
   try {
@@ -27,17 +27,13 @@ export async function fetchPrerequisites(problemData) {
 
 export async function sendSubmissionEvent() {
   const handle = getUserHandle();
-  const problemMeta = getProblemMeta();
-  if (!handle || !problemMeta) return;
+  if (!handle) return;
   fetch(SUBMIT_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      handle,
-      contestId: problemMeta.contestId,
-      problemIndex: problemMeta.index,
+      handle: handle,
       problemUrl: location.href,
-      submittedAt: Date.now()
     })
   });
 }

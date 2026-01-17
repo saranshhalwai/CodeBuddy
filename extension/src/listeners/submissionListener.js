@@ -1,11 +1,30 @@
 import { sendSubmissionEvent } from "../content/api.js";
 
+let listenerInitialized = false;
+
 export function initSubmitListener() {
-  document.addEventListener("submit", (e) => {
-    const form = e.target;
-    if (!form || !form.action) return;
-    if (form.action.includes("/submit")) {
+  if (listenerInitialized) return;
+  listenerInitialized = true;
+
+  console.log("[CF-EXT] initSubmitListener");
+
+  const attach = () => {
+    const btn = document.getElementById("sidebarSubmitButton");
+    if (!btn) return false;
+    btn.addEventListener("click", () => {
+      console.log("[CF-EXT] Submit clicked");
       sendSubmissionEvent();
-    }
+    });
+
+    return true;
+  };
+  if (attach()) return;
+  const observer = new MutationObserver(() => {
+    if (attach()) observer.disconnect();
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
   });
 }

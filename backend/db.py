@@ -15,10 +15,7 @@ async def add_user(user: models.User):
         ref = instance.collection("users").document(user.handle)
 
         if ref.get().exists:
-            raise HTTPException(
-                status_code=409,
-                detail="User already exists"
-            )
+            return
 
         ref.set(user.dict())
         return {"id": ref.id}
@@ -36,11 +33,10 @@ async def add_user_tags(handle: str, tags: list[str]):
     try:
         ref = instance.collection("users").document(handle)
 
-        if not ref.get().exists:
-            raise HTTPException(
-                status_code=404,
-                detail="User not found"
-            )
+        doc = ref.get()
+        if not doc.exists:
+            ref.set({"id": handle, "tags": tags })
+            return {"status": "created", "tags": tags}
         
         ref.update({"tags": firestore.ArrayUnion(tags)})
         return {"status": "updated"}
@@ -52,19 +48,40 @@ async def add_user_tags(handle: str, tags: list[str]):
             status_code=500,
             detail=f"Failed to update user tags: {str(e)}"
         )
+    
+async def get_user_tags(handle: str) -> list[str]:
+    try:
+        ref = instance.collection("users").document(handle)
+        doc = ref.get()
+
+        if not doc.exists:
+            return []
+
+        data = doc.to_dict()
+        return data.get("tags", [])
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to fetch user tags: {str(e)}"
+        )
 
 # add a new problem along with its tags
 async def add_problem(problem: models.Problem):
     try:
         ref = instance.collection("problems").document(problem.problem_id)
 
-        if ref.get().exists:
-            raise HTTPException(
-                status_code=409,
-                detail="Problem already exists"
-            )
+        tags_as_strings = [tag.tag for tag in problem.tags]
 
-        ref.set(problem.dict())
+        if ref.get().exists:
+            return {"status": "exists"}
+
+        ref.set({
+            "problem_id": problem.problem_id,
+            "tags": tags_as_strings
+        })
         return {"id": ref.id}
 
     except HTTPException:
@@ -77,7 +94,7 @@ async def add_problem(problem: models.Problem):
 
 
 # update tags of an existing problem
-async def update_problem_tags(problem_id: str, tags: list[str]):
+async def update_problem_tags(problem_id: str, tags: list[models.Tag]):
     try:
         ref = instance.collection("problems").document(problem_id)
 
@@ -87,7 +104,9 @@ async def update_problem_tags(problem_id: str, tags: list[str]):
                 detail="Problem not found"
             )
 
-        ref.update({"tags": tags})
+        tags_as_strings = [tag.tag for tag in tags]
+
+        ref.update({"tags": tags_as_strings})
         return {"status": "updated"}
 
     except HTTPException:
@@ -98,3 +117,24 @@ async def update_problem_tags(problem_id: str, tags: list[str]):
             detail=f"Failed to update problem tags: {str(e)}"
         )
 
+async def get_problem_tags(problem_id: str) -> list[str]:
+    try:
+        ref = instance.collection("problems").document(problem_id)
+        doc = ref.get()
+
+        if not doc.exists:
+            return []
+
+        data = doc.to_dict()
+        tags: list[str] = data.get("tags", [])
+
+        return tags
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to fetch problem tags: {str(e)}"
+        )
+    

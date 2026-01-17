@@ -6,6 +6,7 @@ from typing import Optional
 NonEmptyStr = Annotated[str, StringConstraints(min_length=1)]
 
 class InputData(BaseModel):
+    handle: Optional[str] = None
     platform: str
     url: str
     title: str
@@ -33,6 +34,14 @@ class User(BaseModel):
     handle: str
     tags: list[str]
 
+class Tag(BaseModel):
+    tag: str
+    known: bool
+
 class Problem(BaseModel):
     problem_id: str
-    tags: list[str]
+    tags: list[Tag]
+
+class VerifySolutionRequest(BaseModel):
+    handle: str
+    problemUrl: str

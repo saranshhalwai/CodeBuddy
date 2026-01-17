@@ -2,18 +2,23 @@ import { extractCodeforcesProblem } from "./content/extractor.js";
 import { fetchPrerequisites } from "./content/api.js";
 import { injectSidebarUI, renderPrerequisites } from "./content/uiInjector.js";
 import { initSubmitListener } from "./listeners/submissionListener.js";
+import { getUserHandle } from "./content/submissionExtractor.js";
 
+initSubmitListener();
 injectSidebarUI(async () => {
   const problem = extractCodeforcesProblem();
-  if (!problem || !problem.title) return;
+  if (!problem) return;
 
-  initSubmitListener();
-  console.log("Hi")
   renderPrerequisites({
     prerequisites: ["Analyzing..."],
     difficulty: ""
   });
-
-  const result = await fetchPrerequisites(problem);
+  const handle = getUserHandle();
+  console.log(handle)
+  const payload = {
+    ...problem,
+    ...(handle ? { handle } : {})
+  };
+  const result = await fetchPrerequisites(payload);
   renderPrerequisites(result);
 });

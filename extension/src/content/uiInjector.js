@@ -22,36 +22,18 @@ export function injectSidebarUI(onAnalyzeClick) {
       cursor:pointer;
       user-select:none;
     ">
-      <div style="
-        display:flex;
-        align-items:center;
-        gap:6px;
-      ">
-        <span style="
-          font-size:14px;
-          color:#3B5998;
-        ">→</span>
-
-        <span style="
-          font-size:14px;
-          font-weight:600;
-          color:#3B5998;
-        ">
+      <div style="display:flex; align-items:center; gap:6px;">
+        <span style="font-size:14px; color:#3B5998;">→</span>
+        <span style="font-size:14px; font-weight:600; color:#3B5998;">
           Prerequisites
         </span>
       </div>
-
-      <span id="cf-prereq-toggle" style="
-        width:12px;
-        height:12px;
-        display:inline-block;
-      "></span>
+      <span id="cf-prereq-toggle"
+        style="width:12px; height:12px; display:inline-block;">
+      </span>
     </div>
 
-    <div style="
-      border-top:1px solid #e0e0e0;
-      margin:6px 0;
-    "></div>
+    <div style="border-top:1px solid #e0e0e0; margin:6px 0;"></div>
 
     <button id="cf-analyze-btn"
       style="
@@ -74,7 +56,6 @@ export function injectSidebarUI(onAnalyzeClick) {
 
   const arrow = container.querySelector("#cf-prereq-toggle");
 
-  // inject SVG AFTER element exists
   arrow.innerHTML = `
     <svg viewBox="0 0 320 512"
          width="12"
@@ -97,12 +78,16 @@ export function injectSidebarUI(onAnalyzeClick) {
   };
 }
 
-
 export function renderPrerequisites(result) {
   const box = document.getElementById("cf-prereq-result");
   if (!box) return;
 
-  if (!result || !Array.isArray(result.prerequisites)) {
+  let tags;
+  if (Array.isArray(result)) {
+    tags = result;
+  } else if (Array.isArray(result?.tags)) {
+    tags = result.tags;
+  } else {
     box.innerHTML = `
       <div style="font-size:11px; color:red;">
         Invalid response format
@@ -111,11 +96,12 @@ export function renderPrerequisites(result) {
     return;
   }
 
-  const bgColor = {
-    EASY: "#f5f5f5",
-    MEDIUM: "#e6e6e6",
-    HARD: "#d6d6d6"
-  };
+  const knownTags = tags.filter(t => t.known === true);
+  const unknownTags = tags.filter(t => t.known !== true);
+
+  unknownTags.sort((a, b) => a.tag.localeCompare(b.tag));
+
+  const grayShades = ["#f5f5f5", "#ececec", "#e2e2e2", "#d8d8d8"];
 
   box.innerHTML = `
     <div style="
@@ -124,22 +110,48 @@ export function renderPrerequisites(result) {
       gap:4px;
       margin-top:4px;
     ">
-      ${result.prerequisites
-        .map(p => `
+
+      <!-- ✅ Known tags on top -->
+      ${knownTags.map(t => `
+        <div style="
+          display:inline-flex;
+          align-items:center;
+          gap:6px;
+          width:fit-content;
+          padding:3px 7px;
+          font-size:11px;
+          border-radius:3px;
+          background:#ffffff;
+          border:1px solid #34a853;
+          color:#137333;
+          font-weight:600;
+        ">
+          ✓ ${t.tag}
+        </div>
+      `).join("")}
+
+      <!-- ⏳ Unknown tags with increasing gray -->
+      ${unknownTags.map((t, idx) => {
+        const bg = grayShades[idx % grayShades.length];
+        return `
           <div style="
-            display:inline-block;
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
             width:fit-content;
             padding:3px 7px;
             font-size:11px;
             border-radius:3px;
-            background:${bgColor[p.level] || "#f5f5f5"};
+            background:${bg};
             border:1px solid #b9b9b9;
-            color:black;
+            color:#000;
           ">
-            ${p.topic}
+            ${t.tag}
           </div>
-        `)
-        .join("")}
+        `;
+      }).join("")}
+
     </div>
   `;
 }
+
