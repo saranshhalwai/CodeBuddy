@@ -1,0 +1,11 @@
+# Ignore everything by default
+**
+
+# Allow required files
+!Dockerfile
+!requirements.txt
+!main.py
+!db.py
+!models.py
+!helper.py
+!firebase-service-account.json
