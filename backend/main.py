@@ -1,10 +1,8 @@
-from dataclasses import Field
-from typing import Optional
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import httpx
-from pydantic import BaseModel, Field
-from typing_extensions import Annotated
+import models
+import db
 
 
 app = FastAPI()
@@ -23,43 +21,26 @@ ML_SERVICE_URL = "http://127.0.0.1:9000/"
 leetcodeUrl = "askleetcode"
 codeforcesUrl = "askcodeforces"
 
-# ---------- Models ----------
-class InputData(BaseModel):
-    platform: str
-    url: str
-    title: str
-    timeLimit: str
-    memoryLimit: str
-    statement: str
-    examples: str 
-
-class AskCodeForcesRequest(BaseModel):
-    problem: str = Field(min_length=1)
-    solution: Optional[str] = Field(min_length=1)  
-
-class AskLeetCodeRequest(BaseModel):
-    question: str = Field(min_length=1)
-
-class Prerequisite(BaseModel):
-    level: str
-    topic: str
-    description: str
-
-class Prerequisites(BaseModel):
-    prerequisites: list[Prerequisite]
-
 # ---------- Routes ----------
-@app.get("/")
-def root():
-    return {"status": "ok"}
+@app.get("/test")
+async def root():
+    try:
+        return {"status": "ok"}
+    except httpx.RequestError as e:
+        print("ML service request failed:", repr(e))
+        raise HTTPException(
+            status_code=503,
+            detail="ML service unreachable"
+        )
 
-@app.post("/analyze", response_model=Prerequisites)
-async def analyze(data: InputData):
+
+@app.post("/analyze", response_model=models.Prerequisites)
+async def analyze(data: models.InputData):
     try:
         if data.platform.lower() == "codeforces":
             url = ML_SERVICE_URL + codeforcesUrl
 
-            payload = AskCodeForcesRequest(
+            payload = models.AskCodeForcesRequest(
                 problem=f"""
                 Title: {data.title}
 
@@ -75,7 +56,7 @@ async def analyze(data: InputData):
         elif data.platform.lower() == "leetcode":
             url = ML_SERVICE_URL + leetcodeUrl
 
-            payload = AskLeetCodeRequest(
+            payload = models.AskLeetCodeRequest(
                 question=f"""
                     Title: {data.title}
 
@@ -94,8 +75,21 @@ async def analyze(data: InputData):
 
         if ml_response.status_code != 200:
             raise HTTPException(status_code=502, detail="ML service error")
+        
+        data = ml_response.json();
+        problem_id = "test_id"
+        tags = list({
+            p["topic"].strip().lower()
+            for p in data.get("prerequisites", [])
+        })
 
-        return ml_response.json()
+        problem = models.Problem(
+            problem_id=problem_id,
+            tags=tags
+        )
+
+        await db.add_problem(problem)
+        return data
 
     except httpx.RequestError as e:
         print("ML service request failed:", repr(e))
@@ -103,5 +97,3 @@ async def analyze(data: InputData):
             status_code=503,
             detail="ML service unreachable"
         )
-
-

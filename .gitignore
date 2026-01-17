@@ -112,4 +112,6 @@ temp/
 # Ignore environment-specific local files
 .local
 
+./backend/firebase-service-account.json
+
 # End of file
