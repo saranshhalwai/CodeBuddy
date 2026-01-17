@@ -7,7 +7,9 @@ import models
 import db
 import logging
 import helper
-
+import os
+from dotenv import load_dotenv
+load_dotenv()
 app = FastAPI()
 
 class LogAndValidateMiddleware(BaseHTTPMiddleware):
@@ -46,7 +48,7 @@ app.add_middleware(
 
 # ---------- Constants ----------
 # ML_SERVICE_URL = "http://127.0.0.1:9000/"
-ML_SERVICE_URL = "https://agent-api-1046850164238.asia-south1.run.app/"
+ML_SERVICE_URL = os.getenv("ML_SERVICE_URL")
 leetcodeUrl = "askleetcode"
 codeforcesUrl = "askcodeforces"
 logger = logging.getLogger("uvicorn")
